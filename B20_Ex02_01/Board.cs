@@ -19,26 +19,35 @@ namespace B20_Ex02_01
 
         private class Tile
         {
-            private char m_ContentOfTile;
-            private int m_RowSize;
-            private int m_ColumnSize;
+            private object m_ContentOfTile;
+            private int m_Row;
+            private int m_Column;
+            private bool m_IsOpen;
 
-            public char ContentOfTile
+            public Tile(object i_ContentOfTile, int i_Row, int i_Column)
             {
-                get { return this.m_ContentOfTile; }
-                set { this.m_ContentOfTile = value; }
+                this.m_Column = i_Column;
+                this.m_Row = i_Row;
+                this.m_ContentOfTile = i_ContentOfTile;
+                this.m_IsOpen = false;
             }
 
-            public int RowSize
+            public bool IsOpen
             {
-                get { return this.m_RowSize; }
-                set { this.m_RowSize = value; }
+                get { return this.m_IsOpen; }
+                set { this.m_IsOpen = value; }
             }
 
-            public int ColumnSize
+            public object returnContentOfTile()
             {
-                get { return this.m_ColumnSize; }
-                set { this.m_ColumnSize = value; }
+                if (this.m_IsOpen)
+                {
+                    return this.m_ContentOfTile;
+                }
+                else
+                {
+                    return ' ';
+                }
             }
         }
 
@@ -54,6 +63,7 @@ namespace B20_Ex02_01
             int maxNumber = (this.m_ColumnBorder * this.m_RowBorder) / 2;
             Random random = new Random();
             int randomNumber = random.Next(0, maxNumber);
+            object ContentOfTile;
 
             for (int i = 0; i < this.m_RowBorder; ++i)
             {
@@ -61,11 +71,9 @@ namespace B20_Ex02_01
                 {
                     if (arrayForTileCreation[1, randomNumber] < 2)
                     {
-                        this.m_Tile[i,j]= new Tile();
-                        this.m_Tile[i, j].ContentOfTile = Convert.ToChar(arrayForTileCreation[0, randomNumber] + 65); //ascii of A 65
+                        ContentOfTile = Convert.ToChar(arrayForTileCreation[0, randomNumber] + 'A');
+                        this.m_Tile[i,j]= new Tile(ContentOfTile, i, j);
                         ++arrayForTileCreation[1, randomNumber];
-                        this.m_Tile[i, j].RowSize = i;
-                        this.m_Tile[i, j].ColumnSize = j;
                     }
                     else
                     {
@@ -79,13 +87,15 @@ namespace B20_Ex02_01
 
         public void printBoard()
         {
+            //Console.WriteLine(); GRAPHICS
+
             for (int i = 0; i < this.m_RowBorder; ++i)
             {
                 for (int j = 0; j < this.m_ColumnBorder; ++j)
                 {
-                    Console.Write(this.m_Tile[i,j].ContentOfTile.ToString());
+                    Console.Write(this.m_Tile[i,j].returnContentOfTile().ToString());
                 }
-                Console.Write("\n");
+                Console.WriteLine("");
             }
             
         }
