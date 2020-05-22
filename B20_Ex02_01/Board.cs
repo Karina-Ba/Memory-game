@@ -59,11 +59,11 @@ namespace B20_Ex02_01
             {
                 for (int j = 0; j < this.m_ColumnBorder; ++j)
                 {
-                    if (arrayForTileCreation[0, randomNumber] < 2)
+                    if (arrayForTileCreation[1, randomNumber] < 2)
                     {
                         this.m_Tile[i,j]= new Tile();
                         this.m_Tile[i, j].ContentOfTile = Convert.ToChar(arrayForTileCreation[0, randomNumber] + 65); //ascii of A 65
-                        ++arrayForTileCreation[0, randomNumber];
+                        ++arrayForTileCreation[1, randomNumber];
                         this.m_Tile[i, j].RowSize = i;
                         this.m_Tile[i, j].ColumnSize = j;
                     }
@@ -84,8 +84,8 @@ namespace B20_Ex02_01
                 for (int j = 0; j < this.m_ColumnBorder; ++j)
                 {
                     Console.Write(this.m_Tile[i,j].ContentOfTile.ToString());
-
                 }
+                Console.Write("\n");
             }
             
         }
