@@ -1,23 +1,36 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace B20_Ex02_01
 {
     public class UserInterface
     {
-        private GuessingGame game;
-
-        public void InitGame()
+        //----------------------------------------------------------------------//
+        public void InitProgram()
         {
-            
-            this.CreatePlayers();
-            this.CreateBoard();
-        }
+            GuessingGame game = new GuessingGame();
+            this.CreateObjectArray(game);
+            this.CreatePlayers(game);
+            this.CreateBoard(game);
+            game.createRandomBoard();
 
-        public void CreatePlayers()
+            
+
+            game.Board.printBoard();
+
+        }
+        //----------------------------------------------------------------------//
+        public void CreateObjectArray(GuessingGame i_Game)
+        {
+            i_Game.ObjectArray = new object[18]
+                { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R' };
+        }
+        //----------------------------------------------------------------------//
+        public void CreatePlayers(GuessingGame i_Game)
         {
             Console.Write("Hello player, please enter your name: ");
             string name = Console.ReadLine();
-            game.CreatePlayer(name, false);
+            i_Game.Players[0] = new Player(name, false);
 
             Console.WriteLine(@"
 {0}, would you like to play against another player or against the PC?
@@ -35,15 +48,15 @@ namespace B20_Ex02_01
             {
                 Console.WriteLine("Please Enter the 2nd players name: ");
                 name = Console.ReadLine();
-                game.CreatePlayer(name, false);
+                i_Game.Players[1] = new Player(name, false);
             }
             else
             {
-                game.CreatePlayer("PC", true);
+                i_Game.Players[1] = new Player("PC", true);
             }
         }
-
-        public void CreateBoard()
+        //----------------------------------------------------------------------//
+        public void CreateBoard(GuessingGame i_Game)
         {
             Console.WriteLine("Please enter the board size, range of the board is minimum 4x4 and maximum 6x6");
             Console.Write("Rows: ");
@@ -60,9 +73,9 @@ namespace B20_Ex02_01
                 colSize = Console.ReadLine();
             }
 
-            game.Board = new Board(int.Parse(rowSize), int.Parse(colSize));
+            i_Game.Board = new Board(int.Parse(rowSize), int.Parse(colSize));
         }
-
+        //----------------------------------------------------------------------//
         private bool checkForValidInput(string i_RowSize, string i_ColSize)
         {
             bool boolToReturn = true;
@@ -88,5 +101,8 @@ namespace B20_Ex02_01
 
             return boolToReturn;
         }
+
     }
+
+
 }
