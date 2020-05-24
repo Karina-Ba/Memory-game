@@ -8,13 +8,15 @@ namespace B20_Ex02_01
         private Tile[,] m_Tile;
         private readonly int m_RowBorder;
         private readonly int m_ColumnBorder;
+
+        private int m_NumberOfOpenTiles;
         //----------------------------------------------------------------------//
         //C'tor
         public Board(int i_RowSize, int i_ColumnSize)
         {
             this.m_ColumnBorder = i_ColumnSize;
             this.m_RowBorder = i_RowSize;
-
+            this.m_NumberOfOpenTiles = 0;
             this.m_Tile = new Tile[i_RowSize, i_ColumnSize];
         }
         //----------------------------------------------------------------------//
@@ -44,6 +46,19 @@ namespace B20_Ex02_01
             set
             {
                 this.m_Tile[i, j] = value;
+            }
+        }
+        //----------------------------------------------------------------------//
+        public int NumberOfOpenTiles
+        {
+            get
+            {
+                return this.m_NumberOfOpenTiles;
+            }
+            set
+            {
+                this.m_NumberOfOpenTiles = value;
+
             }
         }
         //----------------------------------------------------------------------//
@@ -119,20 +134,7 @@ namespace B20_Ex02_01
         }
         //----------------------------------------------------------------------//
         //Functions
-        public void printBoard()
-        {
-            //Console.WriteLine(); GRAPHICS
-
-            for (int i = 0; i < this.m_RowBorder; ++i)
-            {
-                for (int j = 0; j < this.m_ColumnBorder; ++j)
-                {
-                    Console.Write(this.m_Tile[i,j].ContentOfTile.ToString());
-                }
-                Console.WriteLine("");
-            }
-            
-        }
+        
     }
 
 

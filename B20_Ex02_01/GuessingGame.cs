@@ -43,7 +43,7 @@ namespace B20_Ex02_01
         }
         //----------------------------------------------------------------------//
         //Functions
-        public void createRandomBoard()
+        public void CreateRandomBoard()
         {
             int[,] arrayForTileCreation = new int[2, 18];
 
@@ -55,7 +55,6 @@ namespace B20_Ex02_01
             int maxNumber = (this.Board.RowBorder * this.Board.ColumnBorder) / 2;
             Random random = new Random();
             int randomNumber = random.Next(0, maxNumber);
-            int ContentOfTile;
 
             for (int i = 0; i < this.Board.RowBorder; ++i)
             {
@@ -63,8 +62,8 @@ namespace B20_Ex02_01
                 {
                     if (arrayForTileCreation[1, randomNumber] < 2)
                     {
-                        ContentOfTile = arrayForTileCreation[0, randomNumber];
-                        this.Board[i, j] = new Board.Tile(ContentOfTile, i, j);
+                        int contentOfTile = arrayForTileCreation[0, randomNumber];
+                        this.Board[i, j] = new Board.Tile(contentOfTile, i, j);
                         ++arrayForTileCreation[1, randomNumber];
                     }
                     else
@@ -81,12 +80,35 @@ namespace B20_Ex02_01
         {
             return this.m_ObjectArray[i_Index];
         }
-
-        public void MakeAMove(Player i_CurrentPlayer)
+        //----------------------------------------------------------------------//\
+        public void ForwardPlayer(ref Player io_CurrentPlayer)
         {
-            //Get from UI 
+            if (io_CurrentPlayer == this.m_Players[0])
+            {
+                io_CurrentPlayer = this.m_Players[1];
+            }
+            else
+            {
+                io_CurrentPlayer = this.m_Players[0];
+            }
+        }
 
-            //If Q STOP GAME
+        public void ChangeAllTiles()
+        {
+            for(int i=0; i < this.Board.RowBorder; ++i)
+            {
+                for (int j = 0; j < this.Board.ColumnBorder; ++j)
+                {
+                    if (this.Board[i, j].IsOpen == true)
+                    {
+                        this.Board[i, j].IsOpen = false;
+                    }
+                    else
+                    {
+                        this.Board[i, j].IsOpen = true;
+                    }
+                }
+            }
         }
     }
 }

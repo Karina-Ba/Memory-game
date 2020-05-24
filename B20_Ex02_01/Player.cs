@@ -26,5 +26,16 @@ namespace B20_Ex02_01
             }
         }
 
+        public int PointsForCorrectGuesses
+        {
+            get
+            {
+                return this.m_PointsForCorrectGuesses;
+            }
+            set
+            {
+                this.m_PointsForCorrectGuesses = value;
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace B20_Ex02_01
         {
             UserInterface UI = new UserInterface();
 
-            UI.InitProgram();
+            UI.StartGame();
         }
     }
 }
