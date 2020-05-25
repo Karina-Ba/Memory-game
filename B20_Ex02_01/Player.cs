@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace B20_Ex02_01
 {
@@ -7,14 +8,12 @@ namespace B20_Ex02_01
         //Members
         private readonly string m_Name;
         private int m_PointsForCorrectGuesses;
-        private bool m_IsPC;
         //----------------------------------------------------------------------//
         //C'tor
-        public Player(string i_Name, bool i_IsPC)
+        public Player(string i_Name)
         {
             this.m_Name = i_Name;
             this.m_PointsForCorrectGuesses = 0;
-            this.m_IsPC = i_IsPC;
         }
         //----------------------------------------------------------------------//
         //Get
@@ -37,5 +36,7 @@ namespace B20_Ex02_01
                 this.m_PointsForCorrectGuesses = value;
             }
         }
+
     }
+
 }

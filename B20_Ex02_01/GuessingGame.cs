@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace B20_Ex02_01
 {
@@ -6,7 +7,7 @@ namespace B20_Ex02_01
     {
         //Members
         private Board m_Board;
-        private Player[] m_Players = new Player[2] {null, null};
+        private List<Player> m_Players;
         private object[] m_ObjectArray;
         //----------------------------------------------------------------------//
         //SetGet
@@ -22,7 +23,7 @@ namespace B20_Ex02_01
             }
         }
         //----------------------------------------------------------------------//
-        public Player[] Players
+        public List<Player> Players
         {
             get
             {
@@ -91,6 +92,8 @@ namespace B20_Ex02_01
             {
                 io_CurrentPlayer = this.m_Players[0];
             }
+
+            this.m_Players.Equals()
         }
 
         public void ChangeAllTiles()

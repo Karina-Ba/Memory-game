@@ -75,7 +75,7 @@ namespace B20_Ex02_01
                 this.m_Column = i_Column;
                 this.m_Row = i_Row;
                 this.m_ContentOfTile = i_ContentOfTile;
-                this.m_IsOpen = true;
+                this.m_IsOpen = false;
             }
 
             public int ContentOfTile

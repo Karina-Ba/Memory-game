@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace B20_Ex02_01
 {
     public class UserInterface
     {
         private GuessingGame m_Game;
+        private AI m_AIPlayer;
 
         //----------------------------------------------------------------------//
         public UserInterface()
         {
-            m_Game = new GuessingGame();
+            this.m_Game = new GuessingGame();
+            this.m_AIPlayer = null;
         }
-
         //----------------------------------------------------------------------//
         public void StartGame()
         {
@@ -34,7 +37,7 @@ namespace B20_Ex02_01
         {
             Console.Write("Hello player, please enter your name: ");
             string name = Console.ReadLine();
-            this.m_Game.Players[0] = new Player(name, false);
+            this.m_Game.Players.Add(new Player(name));
 
             Console.WriteLine(@"
 {0}, would you like to play against another player or against the PC?
@@ -52,11 +55,11 @@ namespace B20_Ex02_01
             {
                 Console.Write("Please Enter the 2nd players name: ");
                 name = Console.ReadLine();
-                this.m_Game.Players[1] = new Player(name, false);
+                this.m_Game.Players.Add(new Player(name));
             }
             else
             {
-                this.m_Game.Players[1] = new Player("PC", true);
+                this.m_AIPlayer = new AI();
             }
         }
         //----------------------------------------------------------------------//
@@ -105,61 +108,64 @@ namespace B20_Ex02_01
 
             return boolToReturn;
         }
-
+        //----------------------------------------------------------------------//
         public void PlayGame()
         {
-            Player currentPlayer = this.m_Game.Players[0];
-            bool userQuit;
             Board.Tile firstFlipTile, secondFlipTile;
-            showBoardForTwoSeconds();
-            //PRINT BOARD AND SHOW FOW A MOMENT - function
+            PrintBoard();
 
             while (GameEnd() == false)
             {
-                Console.Write("Please enter a first card to flip: ");
-                this.makeAPlayerMove(out firstFlipTile, out userQuit);
-                if (userQuit == true)
+                foreach (Player currentPlayer in this.m_Game.Players)
                 {
-                    break;
+                    Console.Write("Please enter a first card to flip: ");
+                    this.makeAPlayerMove(out firstFlipTile);
+
+                    Console.Write("Please enter a second card to flip: ");
+                    this.makeAPlayerMove(out secondFlipTile);
+
+                    if (firstFlipTile.ContentOfTile != secondFlipTile.ContentOfTile)
+                    {
+                        Console.WriteLine("Oops... not a match!");
+                        this.showBoardForTwoSeconds();
+                        firstFlipTile.IsOpen = secondFlipTile.IsOpen = false;
+                    }
+                    else
+                    {
+                        this.m_Game.Board.NumberOfOpenTiles += 2;
+                        ++currentPlayer.PointsForCorrectGuesses;
+                    }
+
                 }
 
-                Console.Write("Please enter a second card to flip: ");
-                this.makeAPlayerMove(out secondFlipTile, out userQuit);
-                if (userQuit == true)
+                if (this.m_AIPlayer != null)
                 {
-                    break;
-                }
-
-                if (firstFlipTile.ContentOfTile != secondFlipTile.ContentOfTile)
-                {
-                    firstFlipTile.IsOpen = false;
-                    secondFlipTile.IsOpen = false;
-                    this.m_Game.ForwardPlayer(ref currentPlayer);
-                }
-                else
-                {
-                    this.m_Game.Board.NumberOfOpenTiles += 2;
-                    ++currentPlayer.PointsForCorrectGuesses;
+                    this.AITurn();
                 }
             }
         }
         //----------------------------------------------------------------------//
-        private void makeAPlayerMove(out Board.Tile io_Tile, out bool io_userQuit)
+        private void makeAPlayerMove(out Board.Tile io_Tile)
         {
             string userMoveInput;
             userMoveInput = Console.ReadLine();
-            io_userQuit = (userMoveInput == "Q");
-            while (this.checkForValidMove(userMoveInput, out io_Tile) == false && !io_userQuit)
+            bool userQuit = (userMoveInput == "Q");
+            while (this.checkForValidMove(userMoveInput, out io_Tile) == false && !userQuit)
             {
                 Console.Write("No such choice, please re-enter a card to flip: ");
                 userMoveInput = Console.ReadLine();
-                io_userQuit = (userMoveInput == "Q");
+                userQuit = (userMoveInput == "Q");
             }
 
-            if (io_userQuit == false)
+            if (userQuit == false)
             {
                 io_Tile.IsOpen = true;
                 this.PrintBoard();
+            }
+            else
+            {
+                Console.WriteLine("Thank you for playing!");
+                Environment.Exit(0);
             }
         }
         //----------------------------------------------------------------------//
@@ -172,9 +178,9 @@ namespace B20_Ex02_01
 
             if (i_UserMove.Length == 2 && char.IsUpper(i_UserMove[0]) && char.IsDigit(i_UserMove[1]))
             {
-                
-                rowFromInput = Convert.ToInt32(i_UserMove[0] - 'A');
-                colFromInput = Convert.ToInt32(i_UserMove[1] - '0');
+
+                colFromInput = Convert.ToInt32(i_UserMove[0] - 'A');
+                rowFromInput= Convert.ToInt32(i_UserMove[1] - '0');
                 validRows = (rowFromInput <= this.m_Game.Board.RowBorder && rowFromInput >= 0);
                 validColumns = (colFromInput <= this.m_Game.Board.ColumnBorder && colFromInput >= 0);
                 isValidMove = validRows && validColumns;
@@ -182,7 +188,7 @@ namespace B20_Ex02_01
 
             if (isValidMove)
             {
-                io_TileToFlip = this.m_Game.Board[rowFromInput, colFromInput];
+                io_TileToFlip = this.m_Game.Board[rowFromInput - 1, colFromInput];
 
                 if (io_TileToFlip.IsOpen == true)
                 {
@@ -204,12 +210,10 @@ namespace B20_Ex02_01
             this.PrintBoard();
             System.Threading.Thread.Sleep(2000);
             Ex02.ConsoleUtils.Screen.Clear();
-            this.m_Game.ChangeAllTiles();
         }
+        //----------------------------------------------------------------------//
         public void PrintBoard()
         {
-            Ex02.ConsoleUtils.Screen.Clear();
-            
             int rowNumber = 1;
             Console.Write("   ");
 
@@ -243,7 +247,7 @@ namespace B20_Ex02_01
                 this.printLine();
             }
         }
-
+        //----------------------------------------------------------------------//
         private void printLine()
         {
             Console.Write("  ");
@@ -254,6 +258,105 @@ namespace B20_Ex02_01
             }
             
             Console.WriteLine();
+        }
+        //----------------------------------------------------------------------//
+        private void AITurn()
+        {
+            bool foundAMatch = this.m_AIPlayer.findAMatchingSet();
+            Board.Tile firstFlip, secondFlip;
+
+            if (!foundAMatch)
+            {
+                firstFlip = this.m_AIPlayer.ReturnARandomTile(this.m_Game.Board);
+                firstFlip.IsOpen = true;
+                this.PrintBoard();
+                secondFlip = this.m_AIPlayer.ReturnARandomTile(this.m_Game.Board);
+                secondFlip.IsOpen = true;
+                Ex02.ConsoleUtils.Screen.Clear();
+                this.PrintBoard();
+
+                if (firstFlip.ContentOfTile == secondFlip.ContentOfTile)
+                {
+                    ++this.AIPlayer.PointsForCorrectGuesses;
+                }
+                else
+                {
+                    firstFlip.IsOpen = secondFlip.IsOpen = false;
+                    this.AIPlayer.RememberFlip.Add(firstFlip);
+                    this.AIPlayer.RememberFlip.Add(secondFlip);
+                }
+            }
+        }
+
+        public AI AIPlayer
+        {
+            get
+            {
+                return this.m_AIPlayer;
+            }
+        }
+
+        public class AI
+        {
+            private List<Board.Tile> m_RememberFlips;
+            private int m_PointsForCorrectGuesses;
+
+            public AI()
+            {
+                this.m_RememberFlips = new List<Board.Tile>(36);
+            }
+
+            internal List<Board.Tile> RememberFlip
+            {
+                get
+                {
+                    return this.m_RememberFlips;
+                }
+                set
+                {
+                    this.m_RememberFlips = value;
+                }
+            }
+
+            public int PointsForCorrectGuesses
+            {
+                get
+                {
+                    return this.m_PointsForCorrectGuesses;
+                }
+                set
+                {
+                    this.m_PointsForCorrectGuesses = value;
+                }
+            }
+
+            internal Board.Tile ReturnARandomTile(Board i_Board)
+            {
+                Random col = new Random();
+                Random row = new Random();
+                row.Next(0, i_Board.RowBorder);
+                col.Next(0, i_Board.ColumnBorder);
+                int rowIndex = row.Next(0, i_Board.RowBorder);
+                int colIndex = col.Next(0, i_Board.ColumnBorder);
+                while (i_Board[rowIndex, colIndex].IsOpen)
+                {
+                    rowIndex = row.Next(0, i_Board.RowBorder);
+                    colIndex = col.Next(0, i_Board.ColumnBorder);
+                }
+                rowIndex = row.Next(0, i_Board.RowBorder);
+                colIndex = col.Next(0, i_Board.ColumnBorder);
+                Board.Tile firstFlip = i_Board[rowIndex, colIndex];
+                return i_Board[rowIndex, colIndex];
+            }
+
+            internal bool findAMatchingSet()
+            {
+                foreach (Board.Tile currentTile in this.m_RememberFlips)
+                {
+                }
+                return true;
+            }
+
         }
     }
 }
