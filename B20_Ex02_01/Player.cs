@@ -5,18 +5,17 @@ namespace B20_Ex02_01
 {
     public class Player
     {
-        //Members
         private readonly string m_Name;
         private int m_PointsForCorrectGuesses;
+        private AI m_AIPlayer;
         //----------------------------------------------------------------------//
-        //C'tor
         public Player(string i_Name)
         {
             this.m_Name = i_Name;
             this.m_PointsForCorrectGuesses = 0;
+            this.m_AIPlayer = null;
         }
         //----------------------------------------------------------------------//
-        //Get
         public string Name
         {
             get
@@ -24,7 +23,7 @@ namespace B20_Ex02_01
                 return this.m_Name;
             }
         }
-
+        //----------------------------------------------------------------------//
         public int PointsForCorrectGuesses
         {
             get
@@ -36,7 +35,18 @@ namespace B20_Ex02_01
                 this.m_PointsForCorrectGuesses = value;
             }
         }
-
+        //----------------------------------------------------------------------//
+        public AI AIPlayer
+        {
+            get
+            {
+                return this.m_AIPlayer;
+            }
+            set
+            {
+                this.m_AIPlayer = value;
+            }
+        }
     }
 
 }

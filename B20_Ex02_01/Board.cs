@@ -69,7 +69,7 @@ namespace B20_Ex02_01
             private int m_Row;
             private int m_Column;
             private bool m_IsOpen;
-
+            //----------------------------------------------------------------------//
             public Tile(int i_ContentOfTile, int i_Row, int i_Column)
             {
                 this.m_Column = i_Column;
@@ -77,7 +77,7 @@ namespace B20_Ex02_01
                 this.m_ContentOfTile = i_ContentOfTile;
                 this.m_IsOpen = false;
             }
-
+            //----------------------------------------------------------------------//
             public int ContentOfTile
             {
                 get
@@ -96,18 +96,15 @@ namespace B20_Ex02_01
                     this.ContentOfTile = value;
                 }
             }
+            //----------------------------------------------------------------------//
             public bool IsOpen
             {
                 get
                 {
                     return this.m_IsOpen;
                 }
-                set
-                {
-                    this.m_IsOpen = value;
-                }
             }
-
+            //----------------------------------------------------------------------//
             public int Column
             {
                 get
@@ -119,7 +116,7 @@ namespace B20_Ex02_01
                     this.m_Column = value;
                 }
             }
-
+            //----------------------------------------------------------------------//
             public int Row
             {
                 get
@@ -131,10 +128,20 @@ namespace B20_Ex02_01
                     this.m_Row = value;
                 }
             }
+            //----------------------------------------------------------------------//
+            public void OpenTile()
+            {
+                this.m_IsOpen = true;
+            }
+            //----------------------------------------------------------------------//
+            public void CloseTile()
+            {
+                this.m_IsOpen = false;
+            }
         }
         //----------------------------------------------------------------------//
         //Functions
-        
+
     }
 
 
