@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace B20_Ex02_01
+namespace B20_Ex02
 {
     public class Board
     {
@@ -8,15 +8,12 @@ namespace B20_Ex02_01
         private Tile[,] m_Tile;
         private readonly int m_RowBorder;
         private readonly int m_ColumnBorder;
-
-        private int m_NumberOfOpenTiles;
         //----------------------------------------------------------------------//
         //C'tor
         public Board(int i_RowSize, int i_ColumnSize)
         {
             this.m_ColumnBorder = i_ColumnSize;
             this.m_RowBorder = i_RowSize;
-            this.m_NumberOfOpenTiles = 0;
             this.m_Tile = new Tile[i_RowSize, i_ColumnSize];
         }
         //----------------------------------------------------------------------//
@@ -46,19 +43,6 @@ namespace B20_Ex02_01
             set
             {
                 this.m_Tile[i, j] = value;
-            }
-        }
-        //----------------------------------------------------------------------//
-        public int NumberOfOpenTiles
-        {
-            get
-            {
-                return this.m_NumberOfOpenTiles;
-            }
-            set
-            {
-                this.m_NumberOfOpenTiles = value;
-
             }
         }
         //----------------------------------------------------------------------//

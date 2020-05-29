@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace B20_Ex02_01
+namespace B20_Ex02
 {
     public class Player
     {

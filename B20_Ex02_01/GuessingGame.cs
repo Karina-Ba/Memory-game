@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace B20_Ex02_01
+namespace B20_Ex02
 {
     public class GuessingGame
     {
@@ -85,7 +85,7 @@ namespace B20_Ex02_01
             return (eGameType.TryParse(i_UserInput, out this.m_GameType) && (this.m_GameType == eGameType.PlayerVSPlayer || this.m_GameType == eGameType.PlayerVSPC));
         }
         //----------------------------------------------------------------------//
-        public bool CheckForValidInput(string i_RowSize, string i_ColSize)
+        public bool CheckForValidBoardLimitInput(string i_RowSize, string i_ColSize)
         {
             bool boolToReturn = true;
             int numOfRows, numOfCols;
@@ -101,7 +101,7 @@ namespace B20_Ex02_01
 
             if (boolToReturn == true)
             {
-                if ((numOfRows < 4 || numOfRows > 6) || (numOfCols < 4 || numOfCols > 6) || ((numOfCols * numOfRows) % 2 == 1))
+                if ((numOfRows < 2 || numOfRows > 6) || (numOfCols < 2 || numOfCols > 6) || ((numOfCols * numOfRows) % 2 == 1))
                 {
                     boolToReturn = false;
                 }
@@ -160,7 +160,8 @@ namespace B20_Ex02_01
         //----------------------------------------------------------------------//
         public bool GameEnd()
         {
-            return this.Board.NumberOfOpenTiles == (this.Board.ColumnBorder * this.Board.RowBorder);
+            int overAllPoints = (this.Players.First().PointsForCorrectGuesses + this.m_Players.Last().PointsForCorrectGuesses) * 2;
+            return (overAllPoints == (this.Board.ColumnBorder * this.Board.RowBorder));
         }
         //----------------------------------------------------------------------//
         internal bool CheckForValidGameMove(string i_UserMove, out Board.Tile io_TileToFlip)
@@ -204,7 +205,33 @@ namespace B20_Ex02_01
         //----------------------------------------------------------------------//
         internal bool IsMatchingFlip(Board.Tile i_FirstTile, Board.Tile i_SecondTile)
         {
-            return i_FirstTile.ContentOfTile == i_SecondTile.ContentOfTile;
+            bool isMatchingSet = false;
+            bool openedFirstTile = false;
+            bool openedSecondTile = false;
+            if (!i_FirstTile.IsOpen)
+            {
+                i_FirstTile.OpenTile();
+                openedFirstTile = true;
+            }
+            if (!i_SecondTile.IsOpen)
+            {
+                i_SecondTile.OpenTile();
+                openedSecondTile = true;
+            }
+
+            isMatchingSet = i_FirstTile.ContentOfTile == i_SecondTile.ContentOfTile;
+
+            if (openedFirstTile)
+            {
+                i_FirstTile.CloseTile();
+
+            }
+            if (openedSecondTile)
+            {
+                i_SecondTile.CloseTile();
+            }
+
+            return isMatchingSet;
         }
         //----------------------------------------------------------------------//
         public bool IsPlayerAI(Player i_Player)
@@ -223,6 +250,32 @@ namespace B20_Ex02_01
                 io_Player = this.m_Players.First();
             }
         }
-       
+        //----------------------------------------------------------------------//
+        public void RestartGame()
+        {
+            this.Players.First().PointsForCorrectGuesses = 0;
+            this.Players.Last().PointsForCorrectGuesses = 0;
+         }
+        //----------------------------------------------------------------------//
+        public Player FindWinner(out bool i_IsADraw)
+        {
+            Player winner = null;
+            i_IsADraw = false;
+
+            if (this.m_Players.First().PointsForCorrectGuesses == this.m_Players.Last().PointsForCorrectGuesses)
+            {
+                i_IsADraw = true;
+            }
+            else if (this.m_Players.First().PointsForCorrectGuesses > this.m_Players.Last().PointsForCorrectGuesses)
+            {
+                winner = this.m_Players.First();
+            }
+            else
+            {
+                winner = this.m_Players.Last();
+            }
+
+            return winner;
+        }
     }
 }

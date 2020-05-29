@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 
-namespace B20_Ex02_01
+namespace B20_Ex02
 {
     public class UserInterface
     {
@@ -25,18 +25,32 @@ namespace B20_Ex02_01
         //----------------------------------------------------------------------//
         public void StartGame()
         {
-            this.CreatePlayers();
-            this.CreateBoard();
-            Ex02.ConsoleUtils.Screen.Clear();
-            this.PlayGame();
+            bool continuePlaying = true;
+            bool firstGame = true;
+            while (continuePlaying)
+            {
+                if (firstGame)
+                {
+                    this.CreatePlayers();
+                    firstGame = false;
+                }
+                else
+                {
+                    Ex02.ConsoleUtils.Screen.Clear();
+                    this.Game.RestartGame();
+                }
+                this.CreateBoard();
+                Ex02.ConsoleUtils.Screen.Clear();
+                continuePlaying = this.PlayGame();
+            }
         }
         //----------------------------------------------------------------------//
         public void CreatePlayers()
-        {
+        { 
             Console.Write("Hello player, please enter your name: ");
             string name = Console.ReadLine();
             this.m_Game.AddPlayerToList(name);
-
+            
             Console.WriteLine(@"
 {0}, would you like to play against another player or against the PC?
 1. Another player
@@ -69,7 +83,7 @@ namespace B20_Ex02_01
             Console.Write("Columns: ");
             string colSize = Console.ReadLine();
 
-            while (this.m_Game.CheckForValidInput(rowSize, colSize) == false)
+            while (this.m_Game.CheckForValidBoardLimitInput(rowSize, colSize) == false)
             {
                 Console.WriteLine("Invalid size, please enter the board size, range of the board is minimum 4x4 and maximum 6x6");
                 Console.Write("Rows: ");
@@ -81,15 +95,25 @@ namespace B20_Ex02_01
             this.m_Game.SetBoard(int.Parse(rowSize), int.Parse(colSize));
         }
         //----------------------------------------------------------------------//
-        public void PlayGame()
+        public bool PlayGame()
         {
             Player currentPlayer = this.m_Game.Players.First();
 
             while (!this.m_Game.GameEnd())
             {
                 this.makeAPlayerMove(ref currentPlayer);
-
             }
+
+            this.DeclareWinner();
+            Console.Write("{0}, would you like to play again? Y/N: ", this.m_Game.Players.First().Name);
+            string userAnswer = Console.ReadLine();
+            while (userAnswer != "Y" && userAnswer != "N")
+            {
+                Console.Write("No such option, please enter Y/N: ");
+                userAnswer = Console.ReadLine();
+            }
+
+            return userAnswer == "Y";
         }
         //----------------------------------------------------------------------//
         private void makeAPlayerMove(ref Player io_Player)
@@ -112,7 +136,6 @@ namespace B20_Ex02_01
             if (this.m_Game.IsMatchingFlip(firstFlipTile, secondFlipTile))
             {
                 Console.WriteLine("Good job, you get a point!");
-                ++this.m_Game.Board.NumberOfOpenTiles;
                 ++io_Player.PointsForCorrectGuesses;
             }
             else
@@ -146,6 +169,7 @@ namespace B20_Ex02_01
         public void ClearScreenShowBoard(Player i_Player)
         {
             Ex02.ConsoleUtils.Screen.Clear();
+            printScoreBoard();
             Console.WriteLine("{0}'s turn now: {1}", i_Player.Name, Environment.NewLine);
             this.PrintBoard();
             Console.WriteLine();
@@ -187,6 +211,23 @@ namespace B20_Ex02_01
             }
         }
         //----------------------------------------------------------------------//
+        private void printScoreBoard()
+        {
+
+            Console.WriteLine(@"
+         Score Board
+||============================||
+||    {0,-12}|  {1,-5}    ||
+||----------------------------||
+||    {2,-12}|  {3,-5}    ||
+||============================||{4}",
+                this.m_Game.Players.First().Name,
+                this.Game.Players.First().PointsForCorrectGuesses,
+                this.Game.Players.Last().Name,
+                this.Game.Players.Last().PointsForCorrectGuesses,
+                Environment.NewLine);
+        }
+        //----------------------------------------------------------------------//
         private void printSeparationLine()
         {
             Console.Write("  ");
@@ -199,5 +240,21 @@ namespace B20_Ex02_01
             Console.WriteLine();
         }
         //----------------------------------------------------------------------//
+        public void DeclareWinner()
+        {
+            bool isADraw;
+            Player winner = this.m_Game.FindWinner(out isADraw);
+            Ex02.ConsoleUtils.Screen.Clear();
+            this.printScoreBoard();
+
+            if (isADraw)
+            {
+                Console.WriteLine("It's a DRAW!");
+            }
+            else
+            {
+                Console.WriteLine("Congratulations {0}, you are the winner!", winner.Name);
+            }
+        }
     }
 }
