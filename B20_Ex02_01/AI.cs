@@ -39,20 +39,21 @@ namespace B20_Ex02
         //----------------------------------------------------------------------//
         internal void MakeAIMove(UserInterface i_UI, out Board.Tile o_FirstTile, out Board.Tile o_SecondTile, Player i_Player)
         {
-            bool foundTileInList = ReturnRandomTileFromList(out o_FirstTile, i_UI.Game.RandomNumber);
-            if (!foundTileInList)
-            {
-                o_FirstTile = this.ReturnARandomTileFromBoard(i_UI.Game);
-                this.m_RememberFlips.Add(o_FirstTile);
-            }
-
-            bool foundMatchingTileInList = this.findAMatchingSet(o_FirstTile, out o_SecondTile, i_UI.Game); //Looks for a match for second tile
-            if (!foundMatchingTileInList)
+            bool foundMatchInList = findAMatchInList(out o_FirstTile, out o_SecondTile, i_UI.Game);
+            if (!foundMatchInList)
             {
                 o_SecondTile = this.ReturnARandomTileFromBoard(i_UI.Game);
                 while (o_SecondTile == o_FirstTile)
                 {
                     o_SecondTile = this.ReturnARandomTileFromBoard(i_UI.Game);
+                }
+                if (!this.m_RememberFlips.Contains(o_SecondTile) && !i_UI.Game.IsMatchingFlip(o_FirstTile, o_SecondTile))
+                {
+                    this.m_RememberFlips.Add(o_SecondTile);
+                }
+                else if(i_UI.Game.IsMatchingFlip(o_FirstTile, o_SecondTile))
+                {
+                    this.m_RememberFlips.Remove(o_FirstTile);
                 }
             }
             else
@@ -60,12 +61,8 @@ namespace B20_Ex02
                 this.m_RememberFlips.Remove(o_FirstTile);
                 this.m_RememberFlips.Remove(o_SecondTile);
             }
-            
+
             this.OpenAndPrintBoard(o_FirstTile, o_SecondTile, i_UI, i_Player);
-            if (!foundMatchingTileInList && !i_UI.Game.IsMatchingFlip(o_FirstTile, o_SecondTile) && !this.m_RememberFlips.Contains(o_SecondTile))
-            {
-                this.m_RememberFlips.Add(o_SecondTile);
-            }
         }
         //----------------------------------------------------------------------//
         internal bool ReturnRandomTileFromList(out Board.Tile io_Tile, Random i_Random)
@@ -134,6 +131,32 @@ namespace B20_Ex02
             System.Threading.Thread.Sleep(2000);
             i_SecondTile.OpenTile();
             i_UI.ClearScreenShowBoard(i_Player);
+        }
+
+        private bool findAMatchInList(out Board.Tile o_FirstTile, out Board.Tile o_SecondTile, GuessingGame i_Game)
+        {
+            bool isFoundMatch = false;
+            o_SecondTile = o_FirstTile = null;
+            foreach (Board.Tile currentTile in this.m_RememberFlips)
+            {
+                isFoundMatch = this.findAMatchingSet(currentTile, out o_SecondTile, i_Game);
+                if (isFoundMatch)
+                {
+                    o_FirstTile = currentTile;
+                    break;
+                }
+            }
+
+            if (!isFoundMatch)
+            {
+                if (!ReturnRandomTileFromList(out o_FirstTile, i_Game.RandomNumber))
+                {
+                    o_FirstTile = this.ReturnARandomTileFromBoard(i_Game);
+                    this.m_RememberFlips.Add(o_FirstTile);
+                }
+            }
+
+            return isFoundMatch;
         }
     }
 }
