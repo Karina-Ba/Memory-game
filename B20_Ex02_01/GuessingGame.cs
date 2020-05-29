@@ -101,7 +101,7 @@ namespace B20_Ex02
 
             if (boolToReturn == true)
             {
-                if ((numOfRows < 2 || numOfRows > 6) || (numOfCols < 2 || numOfCols > 6) || ((numOfCols * numOfRows) % 2 == 1))
+                if ((numOfRows < 4 || numOfRows > 6) || (numOfCols < 4 || numOfCols > 6) || ((numOfCols * numOfRows) % 2 == 1))
                 {
                     boolToReturn = false;
                 }
