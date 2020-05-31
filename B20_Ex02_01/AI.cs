@@ -132,21 +132,30 @@ namespace B20_Ex02
 
             foreach (Board.Tile currentTile in this.m_RememberFlips)
             {
-                isFoundMatch = this.findAMatchingSet(currentTile, out o_SecondTile, i_Game);
-
-                if (isFoundMatch)
+                if (!currentTile.IsOpen)
                 {
-                    o_FirstTile = currentTile;
-                    break;
+                    isFoundMatch = this.findAMatchingSet(currentTile, out o_SecondTile, i_Game);
+
+                    if (isFoundMatch)
+                    {
+                        o_FirstTile = currentTile;
+                        break;
+                    }
                 }
             }
 
             if (!isFoundMatch)
             {
-                if (!ReturnRandomTileFromList(out o_FirstTile, i_Game.RandomNumber))
+                o_FirstTile = this.ReturnARandomTileFromBoard(i_Game);
+
+                if (!this.m_RememberFlips.Contains(o_FirstTile))
                 {
-                    o_FirstTile = this.ReturnARandomTileFromBoard(i_Game);
                     this.m_RememberFlips.Add(o_FirstTile);
+
+                    if (findAMatchingSet(o_FirstTile, out o_SecondTile, i_Game))
+                    {
+                        isFoundMatch = true;
+                    }
                 }
             }
 
