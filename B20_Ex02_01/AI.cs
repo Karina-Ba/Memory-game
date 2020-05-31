@@ -6,7 +6,6 @@ namespace B20_Ex02
     public class AI
     {
         private List<Board.Tile> m_RememberFlips;
-        private int m_PointsForCorrectGuesses;
         //----------------------------------------------------------------------//
         public AI()
         {
@@ -22,18 +21,6 @@ namespace B20_Ex02
             set
             {
                 this.m_RememberFlips = value;
-            }
-        }
-        //----------------------------------------------------------------------//
-        public int PointsForCorrectGuesses
-        {
-            get
-            {
-                return this.m_PointsForCorrectGuesses;
-            }
-            set
-            {
-                this.m_PointsForCorrectGuesses = value;
             }
         }
         //----------------------------------------------------------------------//
@@ -137,7 +124,7 @@ namespace B20_Ex02
             i_SecondTile.OpenTile();
             i_UI.ClearScreenShowBoard(i_Player);
         }
-
+        //----------------------------------------------------------------------//
         private bool findAMatchInList(out Board.Tile o_FirstTile, out Board.Tile o_SecondTile, GuessingGame i_Game)
         {
             bool isFoundMatch = false;
@@ -164,6 +151,11 @@ namespace B20_Ex02
             }
 
             return isFoundMatch;
+        }
+        //----------------------------------------------------------------------//
+        public void ForgetList()
+        {
+            this.m_RememberFlips.Clear();
         }
     }
 }

@@ -184,14 +184,8 @@ namespace B20_Ex02
             if (isValidMove)
             {
                 io_TileToFlip = this.Board[rowFromInput - 1, colFromInput];
-
-                if (io_TileToFlip.IsOpen == true)
-                {
-                    isValidMove = false;
-                    io_TileToFlip = null;
-                }
             }
-
+            
             return isValidMove;
         }
         //----------------------------------------------------------------------//
@@ -259,6 +253,10 @@ namespace B20_Ex02
         {
             this.Players.First().PointsForCorrectGuesses = 0;
             this.Players.Last().PointsForCorrectGuesses = 0;
+            if (this.m_GameType == eGameType.PlayerVSPC)
+            {
+                this.m_Players.Last().AIPlayer.ForgetList();
+            }
          }
         //----------------------------------------------------------------------//
         public Player FindWinner(out bool i_IsADraw)
