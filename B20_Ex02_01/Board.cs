@@ -4,12 +4,10 @@ namespace B20_Ex02
 {
     public class Board
     {
-        //Members
         private Tile[,] m_Tile;
         private readonly int m_RowBorder;
         private readonly int m_ColumnBorder;
         //----------------------------------------------------------------------//
-        //C'tor
         public Board(int i_RowSize, int i_ColumnSize)
         {
             this.m_ColumnBorder = i_ColumnSize;
@@ -17,7 +15,6 @@ namespace B20_Ex02
             this.m_Tile = new Tile[i_RowSize, i_ColumnSize];
         }
         //----------------------------------------------------------------------//
-        //SetGets
         public int RowBorder
         {
             get
@@ -46,7 +43,6 @@ namespace B20_Ex02
             }
         }
         //----------------------------------------------------------------------//
-        //Nested Class
         internal class Tile
         {
             private int m_ContentOfTile;
@@ -66,14 +62,7 @@ namespace B20_Ex02
             {
                 get
                 {
-                    if (this.m_IsOpen)
-                    {
-                        return this.m_ContentOfTile;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
+                    return returnContentOfTile();
                 }
                 set
                 {
@@ -122,10 +111,19 @@ namespace B20_Ex02
             {
                 this.m_IsOpen = false;
             }
-        }
-        //----------------------------------------------------------------------//
-        //Functions
+            //----------------------------------------------------------------------//
+            private int returnContentOfTile()
+            {
+                int returnValue = -1;
 
+                if (this.m_IsOpen)
+                {
+                    returnValue =  this.m_ContentOfTile;
+                }
+
+                return returnValue;
+            }
+        }
     }
 
 

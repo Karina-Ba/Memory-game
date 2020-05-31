@@ -40,6 +40,7 @@ namespace B20_Ex02
         internal void MakeAIMove(UserInterface i_UI, out Board.Tile o_FirstTile, out Board.Tile o_SecondTile, Player i_Player)
         {
             bool foundMatchInList = findAMatchInList(out o_FirstTile, out o_SecondTile, i_UI.Game);
+
             if (!foundMatchInList)
             {
                 o_SecondTile = this.ReturnARandomTileFromBoard(i_UI.Game);
@@ -69,10 +70,12 @@ namespace B20_Ex02
         {
             io_Tile = null;
             bool isTileFound = false;
+
             if (this.m_RememberFlips.Count != 0)
             {
                 io_Tile = m_RememberFlips[i_Random.Next(0, m_RememberFlips.Count)];
             }
+
             while (this.m_RememberFlips.Count > 1  && io_Tile.IsOpen)
             {
                 this.m_RememberFlips.Remove(io_Tile);
@@ -95,6 +98,7 @@ namespace B20_Ex02
         {
             int rowIndex = i_Game.RandomNumber.Next(0, i_Game.Board.RowBorder);
             int colIndex = i_Game.RandomNumber.Next(0, i_Game.Board.ColumnBorder);
+
             while (i_Game.Board[rowIndex, colIndex].IsOpen)
             {
                 rowIndex = i_Game.RandomNumber.Next(0, i_Game.Board.RowBorder);
@@ -108,6 +112,7 @@ namespace B20_Ex02
         {
             o_SecondTile = null;
             bool isMatchFound = false;
+
             foreach (Board.Tile currentTile in this.m_RememberFlips)
             {
                 if (i_Game.IsMatchingFlip(i_FirstTile, currentTile))
@@ -137,9 +142,11 @@ namespace B20_Ex02
         {
             bool isFoundMatch = false;
             o_SecondTile = o_FirstTile = null;
+
             foreach (Board.Tile currentTile in this.m_RememberFlips)
             {
                 isFoundMatch = this.findAMatchingSet(currentTile, out o_SecondTile, i_Game);
+
                 if (isFoundMatch)
                 {
                     o_FirstTile = currentTile;

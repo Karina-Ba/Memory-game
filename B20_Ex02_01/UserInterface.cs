@@ -27,6 +27,7 @@ namespace B20_Ex02
         {
             bool continuePlaying = true;
             bool firstGame = true;
+
             while (continuePlaying)
             {
                 if (firstGame)
@@ -39,6 +40,7 @@ namespace B20_Ex02
                     Ex02.ConsoleUtils.Screen.Clear();
                     this.Game.RestartGame();
                 }
+
                 this.CreateBoard();
                 Ex02.ConsoleUtils.Screen.Clear();
                 continuePlaying = this.PlayGame();
@@ -48,14 +50,15 @@ namespace B20_Ex02
         public void CreatePlayers()
         { 
             Console.Write("Hello player, please enter your name: ");
-            string name = Console.ReadLine();
+            string choice, name = Console.ReadLine();
+
             this.m_Game.AddPlayerToList(name);
-            
             Console.WriteLine(@"
 {0}, would you like to play against another player or against the PC?
 1. Another player
 2. Against the PC", name);
-            string choice = Console.ReadLine();
+            choice = Console.ReadLine();
+
             while (!this.m_Game.IsUserGameTypeInputValid(choice))
             {
                 Console.WriteLine("Invalid input, please try again: ");
@@ -107,6 +110,7 @@ namespace B20_Ex02
             this.DeclareWinner();
             Console.Write("{0}, would you like to play again? Y/N: ", this.m_Game.Players.First().Name);
             string userAnswer = Console.ReadLine();
+
             while (userAnswer != "Y" && userAnswer != "N")
             {
                 Console.Write("No such option, please enter Y/N: ");
@@ -147,17 +151,24 @@ namespace B20_Ex02
             }
 
             System.Threading.Thread.Sleep(2000);
-
         }
         //----------------------------------------------------------------------//
         private void userInputMove(out Board.Tile io_Tile, Player i_Player)
         {
-            string userMoveInput;
-            userMoveInput = Console.ReadLine();
+            string userMoveInput = Console.ReadLine();
             this.m_Game.DidUserQuit(userMoveInput);
+
             while (!this.m_Game.CheckForValidGameMove(userMoveInput, out io_Tile) || (io_Tile != null && io_Tile.IsOpen == true))
             {
-                Console.Write("Tile not available, please re-enter another tile to flip: ");
+                if ((io_Tile != null && io_Tile.IsOpen == true))
+                {
+                    Console.Write("Tile already open, please re-enter another tile to flip: ");
+                }
+                else
+                {
+                    Console.Write("Invalid tile, please re-enter another tile to flip: ");
+                }
+
                 userMoveInput = Console.ReadLine();
                 this.m_Game.DidUserQuit(userMoveInput);
             }
@@ -178,9 +189,8 @@ namespace B20_Ex02
         public void PrintBoard()
         {
             int rowNumber = 1;
-            Console.Write("   ");
-
             char columnChar = 'A';
+            Console.Write("   ");
 
             for (int j = 0; j < this.m_Game.Board.ColumnBorder; ++j)
             {
@@ -195,6 +205,7 @@ namespace B20_Ex02
             {
                 Console.Write("{0} |", rowNumber);
                 ++rowNumber;
+
                 for (int j = 0; j < this.m_Game.Board.ColumnBorder; ++j)
                 {
                     if(this.m_Game.Board[i, j].ContentOfTile == -1)
@@ -206,6 +217,7 @@ namespace B20_Ex02
                         Console.Write(" {0} |",this.m_Game.HashObject(this.m_Game.Board[i,j].ContentOfTile));
                     }
                 }
+
                 Console.WriteLine();
                 this.printSeparationLine();
             }
@@ -213,7 +225,6 @@ namespace B20_Ex02
         //----------------------------------------------------------------------//
         private void printScoreBoard()
         {
-
             Console.WriteLine(@"
          Score Board
 ||============================||

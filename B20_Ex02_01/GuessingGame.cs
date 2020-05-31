@@ -76,7 +76,6 @@ namespace B20_Ex02
             set
             {
                 this.m_RandomNumber = value;
-
             }
         }
         //----------------------------------------------------------------------//
@@ -89,6 +88,7 @@ namespace B20_Ex02
         {
             bool boolToReturn = true;
             int numOfRows, numOfCols;
+
             if (!(int.TryParse(i_RowSize, out numOfRows)))
             {
                 boolToReturn = false;
@@ -124,14 +124,14 @@ namespace B20_Ex02
         private void CreateRandomBoard()
         {
             int[,] arrayForTileCreation = new int[2, 18];
+            int maxNumber = (this.Board.RowBorder * this.Board.ColumnBorder) / 2;
+            int randomNumber = this.m_RandomNumber.Next(0, maxNumber);
+            int contentOfTile;
 
             for (int i = 0; i < 18; ++i)
             {
                 arrayForTileCreation[0, i] = i;
             }
-
-            int maxNumber = (this.Board.RowBorder * this.Board.ColumnBorder) / 2;
-            int randomNumber = this.m_RandomNumber.Next(0, maxNumber);
 
             for (int i = 0; i < this.Board.RowBorder; ++i)
             {
@@ -139,7 +139,7 @@ namespace B20_Ex02
                 {
                     if (arrayForTileCreation[1, randomNumber] < 2)
                     {
-                        int contentOfTile = arrayForTileCreation[0, randomNumber];
+                        contentOfTile = arrayForTileCreation[0, randomNumber];
                         this.Board[i, j] = new Board.Tile(contentOfTile, i, j);
                         ++arrayForTileCreation[1, randomNumber];
                     }
@@ -161,6 +161,7 @@ namespace B20_Ex02
         public bool GameEnd()
         {
             int overAllPoints = (this.Players.First().PointsForCorrectGuesses + this.m_Players.Last().PointsForCorrectGuesses) * 2;
+
             return (overAllPoints == (this.Board.ColumnBorder * this.Board.RowBorder));
         }
         //----------------------------------------------------------------------//
@@ -208,11 +209,13 @@ namespace B20_Ex02
             bool isMatchingSet = false;
             bool openedFirstTile = false;
             bool openedSecondTile = false;
+
             if (!i_FirstTile.IsOpen)
             {
                 i_FirstTile.OpenTile();
                 openedFirstTile = true;
             }
+
             if (!i_SecondTile.IsOpen)
             {
                 i_SecondTile.OpenTile();
@@ -226,6 +229,7 @@ namespace B20_Ex02
                 i_FirstTile.CloseTile();
 
             }
+
             if (openedSecondTile)
             {
                 i_SecondTile.CloseTile();
